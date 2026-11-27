@@ -1,0 +1,18 @@
+import { memoryStorage } from 'remack';
+import { createCupboard, shoppingLines } from '../lib/cupboard.js';
+const owner = { teamId: 'T_DEMO', userId: 'U_OWNER' }, staff = { ...owner, userId: 'U_STAFF' };
+const cupboard = createCupboard({ storage: memoryStorage(), teamId: owner.teamId, ownerIds: [owner.userId] });
+await cupboard.request(staff, { name: 'Black gel pens, 10 pack', quantity: 2 }, 'demo-request');
+let state = await cupboard.read(owner), item = Object.values(state.items)[0];
+await cupboard.count(owner, item.id, 1, 4, 'demo-count');
+state = await cupboard.read(owner);
+console.log('STAFF: Please restock 2 packs of black gel pens.');
+console.log('CUPBOARD: 1 pack on hand; target 4.');
+console.log('SHOPPING LIST:', shoppingLines(state).map(l => `${l.quantity} × ${l.name}`).join(', '));
+await cupboard.approve(owner, state.revision, 'demo-approve');
+state = await cupboard.read(owner);
+console.log('OWNER: Restock approved. Purchase happens on Officeworks.');
+await cupboard.finish(owner, state.order.id, true, 'demo-receive');
+state = await cupboard.read(owner);
+console.log(`DELIVERY: ${state.items[item.id].onHand} packs now on the shelf; ${state.requests.length} open requests.`);
+console.log('\nTry live agent-to-agent chat: npm run ollie -- "Great everyday gel pen multipacks under $30"');

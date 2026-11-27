@@ -1,0 +1,20 @@
+{
+  "name": "cool-pens",
+  "version": "0.1.0",
+  "private": true,
+  "license": "MIT",
+  "type": "module",
+  "description": "A shared stationery cupboard in Slack, with direct Ollie shopping conversations.",
+  "engines": { "node": ">=22" },
+  "scripts": {
+    "start": "node --env-file-if-exists=.env app.js",
+    "dev": "node --watch --env-file-if-exists=.env app.js",
+    "test": "node --test",
+    "demo": "node scripts/demo.mjs",
+    "ollie": "node --env-file-if-exists=.env scripts/ask-ollie.mjs",
+    "manifest": "node --env-file-if-exists=.env scripts/manifest.mjs"
+  },
+  "dependencies": {
+    "remack": "https://codeload.github.com/robjshaw/remack/tar.gz/dedc063680e3fcbe52c6443753d7dccfda046292"
+  }
+}
